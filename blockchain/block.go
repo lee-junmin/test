@@ -1,13 +1,17 @@
-package sublinearverification 
+package blockchain 
 
 import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"math/rand"
+
 	//"math/rand"
 	"strconv"
 	"strings"
 )
+
+var r = rand.New(rand.NewSource(99))
 
 // BlockHeader represents each header of the blocks in the blockchain
 type BlockHeader struct {
@@ -33,7 +37,7 @@ func (b *Block) Init(prevBlock *Block) {
 	h.Write([]byte(c))
 	hashed := h.Sum(nil)
 	b.Header.Hash = hex.EncodeToString(hashed)
-	b.Header.Level = strings.Count(b.Header.Hash, "0") 	//+ strings.Count(b.Header.Hash, "1") 	//+ strings.Count(b.Header.Hash, "2") 	+ strings.Count(b.Header.Hash, "3") 	+ strings.Count(b.Header.Hash, "4") 	+ strings.Count(b.Header.Hash, "5") 	
+	b.Header.Level = strings.Count(b.Header.Hash, "0") //+ strings.Count(b.Header.Hash, "1") 	//+ strings.Count(b.Header.Hash, "2") 	+ strings.Count(b.Header.Hash, "3") 	+ strings.Count(b.Header.Hash, "4") 	+ strings.Count(b.Header.Hash, "5")
 }
 
 // PrintBlock will print all the fields in the block
@@ -54,5 +58,5 @@ func (b *BlockHeader) PrintBlockHeader() {
 	//fmt.Println("Hash:", b.Hash)
 	//fmt.Println("PrevHash:", b.PrevHash)
 	//fmt.Println("PrevLevelHash", b.LevelPrevHash)
-	fmt.Println("Index",b.Index,"Level:",b.Level)
+	fmt.Println("Index", b.Index, "Level:", b.Level)
 }

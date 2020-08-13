@@ -1,4 +1,4 @@
-package sublinearverification
+package blockchain
 
 // FindPrevLevelBlockIndex will take in a block index and
 // RETURN the block index of the closest higher level block

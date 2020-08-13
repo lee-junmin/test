@@ -1,4 +1,4 @@
-package sublinearverification 
+package blockchain 
 
 import (
 	"crypto/sha256"
