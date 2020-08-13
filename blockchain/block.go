@@ -5,8 +5,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/rand"
-
-	//"math/rand"
 	"strconv"
 	"strings"
 )
@@ -32,7 +30,7 @@ type Block struct {
 	Data   int
 }
 
-// TBlock is a block but has  transactions
+// Tblock is a block but has  transactions
 type Tblock struct {
 	Header BlockHeader
 	Data   [100]int

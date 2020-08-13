@@ -23,11 +23,18 @@ type BlockChain struct {
 	lastIndex   int
 }
 
+// TransferBox holds the transaction information in the lockbox
+type TransferBox struct {
+	Certificate []string
+	Data        int
+}
+
 //TblockChain is a blockchain consisting of Tblocks
 type TblockChain struct {
 	LightClient []BlockHeader
 	FullClient  []Tblock
 	lastIndex   int
+	LockBox     []TransferBox
 }
 
 // PrintBlockChain prints all blocks in the blockchain
@@ -140,5 +147,14 @@ func (bc *TblockChain) GenerateBlocks(n int) {
 		newBlock.InitTblock(lastBlock)
 		bc.AddTblock(*newBlock)
 		lastBlock = newBlock
+	}
+}
+
+// FindBlockByIndex will return a full block of a given index
+func (bc *TblockChain) FindBlockByIndex(blockIndex int) *Tblock {
+	for i := 0; i < bc.lastIndex; i++ {
+		if blockIndex == bc.LightClient[i].Index {
+			return &bc.FullClient[i]
+		}
 	}
 }
