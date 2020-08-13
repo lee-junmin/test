@@ -1,4 +1,4 @@
-package sublinear-verification 
+package sublinearverification 
 
 import (
 	"encoding/csv"
@@ -126,7 +126,8 @@ func TestSpvStep(step int, max int, rep int) [][]string{
 	return result
 }
 
-func exportCSV(title string, data [][]string) {
+// Export into a csv file
+func ExportCSV(title string, data [][]string) {
 	file, err := os.Create(title)
 	checkError("Cannot create file", err)
 	defer file.Close()
@@ -139,8 +140,8 @@ func exportCSV(title string, data [][]string) {
 		checkError("Cannot write to file", err)
 	}
 }
-
-func checkError(message string, err error) {
+//Check Error
+func CheckError(message string, err error) {
 	if err != nil {
 		log.Fatal(message, err)
 	}

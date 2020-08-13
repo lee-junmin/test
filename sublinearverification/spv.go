@@ -1,4 +1,4 @@
-package sublinear-verification 
+package sublinearverification 
 
 
 import (
