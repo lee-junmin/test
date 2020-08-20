@@ -41,29 +41,18 @@ func (b *Block) Init(prevBlock *Block) {
 	b.Data = r.Int()
 	b.Header.PrevHash = prevBlock.Header.Hash
 	c := strconv.Itoa(b.Data) + b.Header.PrevHash + strconv.Itoa(b.Header.Index) + strconv.Itoa(b.Header.Level) + b.Header.LevelPrevHash
-	h := sha256.New()
-	h.Write([]byte(c))
-	hashed := h.Sum(nil)
-	b.Header.Hash = hex.EncodeToString(hashed)
-	b.Header.Level = strings.Count(b.Header.Hash, "0") //+ strings.Count(b.Header.Hash, "1") 	//+ strings.Count(b.Header.Hash, "2") 	+ strings.Count(b.Header.Hash, "3") 	+ strings.Count(b.Header.Hash, "4") 	+ strings.Count(b.Header.Hash, "5")
+	b.Header.Hash = CreateHashFromString(c)
+	b.Header.Level = strings.Count(b.Header.Hash, "0")
 }
 
 //InitTblock initializes a block that has transactions
 func (b *Tblock) InitTblock(prevBlock *Tblock) {
-	dataSum := 0
 	for i := 0; i < len(b.Data); i++ {
 		b.Data[i] = rand.Int()
-		dataSum += b.Data[i]
 	}
-
 	b.Header.PrevHash = prevBlock.Header.Hash
-
-	c := strconv.Itoa(dataSum) + b.Header.PrevHash + strconv.Itoa(b.Header.Index) + strconv.Itoa(b.Header.Level) + b.Header.LevelPrevHash
-	h := sha256.New()
-	h.Write([]byte(c))
-	hashed := h.Sum(nil)
-	b.Header.Hash = hex.EncodeToString(hashed)
-	b.Header.Level = strings.Count(b.Header.Hash, "0") //+ strings.Count(b.Header.Hash, "1") 	//+ strings.Count(b.Header.Hash, "2") 	+ strings.Count(b.Header.Hash, "3") 	+ strings.Count(b.Header.Hash, "4") 	+ strings.Count(b.Header.Hash, "5")
+	b.Header.Hash = b.HashFromBlock()
+	b.Header.Level = strings.Count(b.Header.Hash, "0")
 }
 
 // PrintBlock will print all the fields in the block
@@ -91,13 +80,32 @@ func (b *Tblock) PrintBlock() {
 
 }
 
-// PrintBlockHeader will print all the files in a block header
+// PrintBlockHeader will print  a block header
 func (b *BlockHeader) PrintBlockHeader() {
-	//fmt.Println("INDEX", b.Index, "LEVEL", b.Level, "HASH", b.Hash[:3], "L.HASH", b.LevelPrevHash[:3])
-	//fmt.Println("Index", b.Index, "==========")
-	//fmt.Println("Level:", b.Level)
-	//fmt.Println("Hash:", b.Hash)
-	//fmt.Println("PrevHash:", b.PrevHash)
-	//fmt.Println("PrevLevelHash", b.LevelPrevHash)
-	fmt.Println("Index", b.Index, "Level:", b.Level)
+	fmt.Println("Index", b.Index, "==========")
+	fmt.Println("Level:", b.Level)
+	fmt.Println("Hash:", b.Hash)
+	fmt.Println("PrevHash:", b.PrevHash)
+	fmt.Println("PrevLevelHash:", b.LevelPrevHash)
+}
+
+// HashFromBlock will recalculate the hash and RETURN the hash string
+func (b *Tblock) HashFromBlock() string {
+
+	dataSum := 0
+	for i := 0; i < len(b.Data); i++ {
+		dataSum += b.Data[i]
+	}
+	c := strconv.Itoa(dataSum) + b.Header.PrevHash //+ strconv.Itoa(b.Header.Index)
+	result := CreateHashFromString(c)
+	return result
+}
+
+// CreateHashFromString will create a hash from a string
+func CreateHashFromString(s string) string {
+	h := sha256.New()
+	h.Write([]byte(s))
+	hashed := h.Sum(nil)
+	result := hex.EncodeToString(hashed)
+	return result
 }

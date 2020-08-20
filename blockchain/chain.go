@@ -23,18 +23,11 @@ type BlockChain struct {
 	lastIndex   int
 }
 
-// TransferBox holds the transaction information in the lockbox
-type TransferBox struct {
-	Certificate []string
-	Data        int
-}
-
 //TblockChain is a blockchain consisting of Tblocks
 type TblockChain struct {
 	LightClient []BlockHeader
 	FullClient  []Tblock
 	lastIndex   int
-	LockBox     []TransferBox
 }
 
 // PrintBlockChain prints all blocks in the blockchain
@@ -102,9 +95,9 @@ func (bc *BlockChain) AddBlock(b Block) {
 	bc.FullClient[bc.lastIndex].Header.Index = bc.lastIndex
 	// assign the previous hash of the higher level
 	prevLevelIndex := FindPrevLevelBlockIndex(bc.LightClient, bc.lastIndex)
-	bc.LightClient[bc.lastIndex].LevelPrevHash = bc.LightClient[prevLevelIndex].Hash
+	pli := bc.LightClient[prevLevelIndex].Hash
+	bc.LightClient[bc.lastIndex].LevelPrevHash = pli
 
-	//fmt.Println(FindPrevLevelBlockIndex(bc.LightClient, bc.lastIndex))
 	bc.lastIndex++
 }
 
@@ -120,10 +113,13 @@ func (bc *TblockChain) AddTblock(b Tblock) {
 	bc.FullClient[bc.lastIndex].Header.Index = bc.lastIndex
 	// assign the previous hash of the higher level
 	prevLevelIndex := FindPrevLevelBlockIndex(bc.LightClient, bc.lastIndex)
-	bc.LightClient[bc.lastIndex].LevelPrevHash = bc.LightClient[prevLevelIndex].Hash
+	//fmt.Println(prevLevelIndex)
+	pli := bc.LightClient[prevLevelIndex].Hash
+	bc.LightClient[bc.lastIndex].LevelPrevHash = pli
 
 	//fmt.Println(FindPrevLevelBlockIndex(bc.LightClient, bc.lastIndex))
 	bc.lastIndex++
+	//bc.FindBlockByIndex(bc.lastIndex).Header.LevelPrevHash = pli
 }
 
 // GenerateBlocks will take a number and add that number of blocks to the chain
@@ -157,4 +153,5 @@ func (bc *TblockChain) FindBlockByIndex(blockIndex int) *Tblock {
 			return &bc.FullClient[i]
 		}
 	}
+	return nil
 }

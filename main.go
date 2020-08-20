@@ -1,20 +1,17 @@
 package main
 
 import (
-	"github.com/lee-junmin/thesis-blockchain/blockchain"
+	"github.com/lee-junmin/thesis-blockchain/sidechaintransfer"
 	"github.com/lee-junmin/thesis-blockchain/sublinearverification"
 )
 
 func main() {
-	// //sublintest(100, 10000, 100)
-	// testBlock := blockchain.Tblock{}
-	// fmt.Println(testBlock)
-	// //testBlock.InitTblock()
-	// testBlock.PrintBlock()
-
-	test := &blockchain.TblockChain{}
-	test.Init()
-	test.PrintBlockChain()
+	// test := [][]string{}
+	// testRow1 := []string{"a", "b", "c", "d"}
+	// testRow2 := []string{"j", "df", "asd", "ggg"}
+	// test = append(test, testRow1)
+	// test = append(test, testRow2)
+	sidechaintransfer.ExportCSV("./visualisations/test.csv", sidechaintransfer.NeatTransferSim(50000, 1000))
 
 }
 
