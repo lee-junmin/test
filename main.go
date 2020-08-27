@@ -11,7 +11,15 @@ func main() {
 	// testRow2 := []string{"j", "df", "asd", "ggg"}
 	// test = append(test, testRow1)
 	// test = append(test, testRow2)
-	sidechaintransfer.ExportCSV("./visualisations/test.csv", sidechaintransfer.NeatTransferSim(50000, 1000))
+
+	sidechaintransfer.StartSimulationClock()
+	//NetworkSimulation(1)
+	//data, _ := sidechaintransfer.NeatTransferSim(5000, 1000)
+	//sidechaintransfer.ExportCSV("./visualisations/scv-fail.csv", data)
+	//sidechaintransfer.ExportCSV("./visualisations/spv-fail.csv", sidechaintransfer.NeatTransferSimSPV(5000, 1000))
+	//sidechaintransfer.NeatTransferSim(5000, 1000)
+
+	sidechaintransfer.ExportCSV("./visualisations/fail.csv", sidechaintransfer.NetworkFailureTest(1000, 100, 60))
 
 }
 
