@@ -1,5 +1,6 @@
-package sidechaintransfer
+package iotsim
 
+//TODO: need to sort the iotsim testing out
 import (
 	"encoding/csv"
 	"fmt"
@@ -17,27 +18,27 @@ var Network bool
 var NetworkFailRate int
 
 //NeatTransferSim will run a simulation with no attacks
-func NeatTransferSim(r int, sourceSize int) ([][]string, float64) {
-	m := &MainChain{}
-	m.Init(sourceSize)
-	test := &SideChain{}
-	test.Init(10)
+func NeatTransferSim(r int, sourceSize int) ([][]string, float32) {
+	m := &IMainChain{}
+	m.Init()
+	test := &ISideChain{}
+	test.Init(100)
 	result := [][]string{}
-	row := []string{"tranfer_success", "block_index", "transaction_index", "data", "transfer_time"}
+	row := []string{"tranfer_success", "block_index", "transaction_index", "data-time", "data-temp", "data-humidity", "transfer_time"}
 	result = append(result, row)
 
 	successCount := 0
 	//startTime := time.Now()
 	for i := 0; i < r; i++ {
 		//start transfer
-		//block := rand.Intn(sourceSize)
-		block := sourceSize - 1
+		block := rand.Intn(sourceSize)
+		//block := sourceSize - 1
 		transaction := rand.Intn(100)
 		//startTime := time.Now()
 		s, d, t := test.ExecuteTransfer(m, block, transaction)
 		//SimulationClock = SimulationClock.Add(time.Since(startTime))
 
-		newrow := []string{strconv.FormatBool(s), strconv.Itoa(block), strconv.Itoa(transaction), strconv.Itoa(d), t.Format(time.RFC3339)}
+		newrow := []string{strconv.FormatBool(s), strconv.Itoa(block), strconv.Itoa(transaction), d.temp, d.humidity, t.Format(time.RFC3339)}
 		result = append(result, newrow)
 		if s {
 			successCount++
@@ -45,30 +46,30 @@ func NeatTransferSim(r int, sourceSize int) ([][]string, float64) {
 		randomInt := time.Duration(rand.Intn(10) + 100)
 		SimulationClock = SimulationClock.Add(time.Minute * randomInt)
 	}
-	successRate := float64(successCount) / float64(r)
+	successRate := float32(successCount) / float32(r)
 	fmt.Println("scv:", SimulationClock)
 	return result, successRate
 }
 
 //NeatTransferSimSPV will run a simulation with no attacks
 func NeatTransferSimSPV(r int, sourceSize int) ([][]string, float32) {
-	m := &MainChain{}
-	m.Init(sourceSize)
-	test := &SideChain{}
+	m := &IMainChain{}
+	m.Init()
+	test := &ISideChain{}
 	test.Init(10)
 	result := [][]string{}
-	row := []string{"tranfer_success", "block_index", "transaction_index", "data"}
+	row := []string{"tranfer_success", "block_index", "transaction_index", "data-time", "data-temp", "data-humidity", "transfer_time"}
 	result = append(result, row)
 	successCount := 0
 	for i := 0; i < r; i++ {
-		block := sourceSize - 1
-		//block := rand.Intn(sourceSize)
+		//	block := sourceSize - 1
+		block := rand.Intn(sourceSize)
 		transaction := rand.Intn(100)
 		//startTime := time.Now()
 		s, d, t := test.ExecuteTransferSPV(m, block, transaction)
 		//SimulationClock = SimulationClock.Add(time.Since(startTime))
 
-		newrow := []string{strconv.FormatBool(s), strconv.Itoa(block), strconv.Itoa(transaction), strconv.Itoa(d), t.Format(time.RFC3339)}
+		newrow := []string{strconv.FormatBool(s), strconv.Itoa(block), strconv.Itoa(transaction), d.temp, d.humidity, t.Format(time.RFC3339)}
 		result = append(result, newrow)
 		if s {
 			successCount++
@@ -134,6 +135,7 @@ func NetworkSimulation() {
 
 }
 
+//NetworkFailureTest will mock a network failure
 func NetworkFailureTest(r int, sourceSize int, maxTime int) [][]string {
 
 	result := [][]string{}
@@ -157,7 +159,35 @@ func NetworkFailureTest(r int, sourceSize int, maxTime int) [][]string {
 	return result
 }
 
-// min for the minutes, r for the
+func NeatRecordTransferSim(r int) ([][]string, float32) {
+	m := &IMainChain{}
+	m.Init()
+	test := &ISideChain{}
+	test.Init(100)
+	result := [][]string{}
+	row := []string{"product-id", "data-time", "data-temp", "data-humidity"}
+	result = append(result, row)
+
+	successCount := 0
+	//startTime := time.Now()
+	for i := 0; i < r; i++ {
+		id := strconv.Itoa(rand.Intn(19734) + 100000)
+
+		s, d, _ := test.ExecuteRecordTransfer(id, m)
+		//SimulationClock = SimulationClock.Add(time.Since(startTime))
+		for i := 0; i < len(s); i++ {
+			newrow := []string{s[i], d[i].periodStart.Format("2006/01/02 15:04"), d[i].temp, d[i].humidity}
+			result = append(result, newrow)
+
+		}
+		randomInt := time.Duration(rand.Intn(10) + 100)
+		SimulationClock = SimulationClock.Add(time.Minute * randomInt)
+	}
+	successRate := float32(successCount) / float32(r)
+	fmt.Println("scv:", SimulationClock)
+	return result, successRate
+}
+
 func NormalityNetworkFailureTest(min int, r int, sourceSize int, rounds int) [][]string {
 
 	result := [][]string{}

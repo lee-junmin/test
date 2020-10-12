@@ -1,4 +1,4 @@
-failure min per day,scv success rate,spv success rate
+failure min per day,sublinear,linear
 1,1,1
 2,0.999,0.999
 3,0.999,0.998

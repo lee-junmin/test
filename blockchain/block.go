@@ -82,11 +82,12 @@ func (b *Tblock) PrintBlock() {
 
 // PrintBlockHeader will print  a block header
 func (b *BlockHeader) PrintBlockHeader() {
-	fmt.Println("Index", b.Index, "==========")
-	fmt.Println("Level:", b.Level)
-	fmt.Println("Hash:", b.Hash)
-	fmt.Println("PrevHash:", b.PrevHash)
-	fmt.Println("PrevLevelHash:", b.LevelPrevHash)
+	// fmt.Println("Index", b.Index, "==========")
+	//fmt.Println("Level:", b.Level)
+	// fmt.Println("Hash:", b.Hash)
+	// fmt.Println("PrevHash:", b.PrevHash)
+	// fmt.Println("PrevLevelHash:", b.LevelPrevHash)
+	fmt.Println(b.Level)
 }
 
 // HashFromBlock will recalculate the hash and RETURN the hash string
